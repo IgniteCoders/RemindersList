@@ -1,4 +1,4 @@
-package com.example.reminderslist
+package com.example.reminderslist.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.reminderslist.R
+import com.example.reminderslist.data.Task
+import com.example.reminderslist.adapters.TaskAdapter
+import com.example.reminderslist.data.TaskDAO
 import com.example.reminderslist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

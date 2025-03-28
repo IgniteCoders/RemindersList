@@ -1,8 +1,9 @@
-package com.example.reminderslist
+package com.example.reminderslist.data
 
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
+import com.example.reminderslist.utils.DatabaseManager
 
 class TaskDAO(context: Context) {
 

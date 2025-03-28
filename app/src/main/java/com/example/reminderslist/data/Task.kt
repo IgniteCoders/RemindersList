@@ -1,4 +1,4 @@
-package com.example.reminderslist
+package com.example.reminderslist.data
 
 class Task (
     var id: Long,

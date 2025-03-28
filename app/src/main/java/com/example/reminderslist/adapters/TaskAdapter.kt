@@ -1,9 +1,10 @@
-package com.example.reminderslist
+package com.example.reminderslist.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.reminderslist.data.Task
 import com.example.reminderslist.databinding.ItemTaskBinding
 
 class TaskAdapter(var items: List<Task>, val onClick: (Int) -> Unit) : Adapter<TaskViewHolder>() {
