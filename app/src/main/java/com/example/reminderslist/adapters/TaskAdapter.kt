@@ -23,6 +23,11 @@ class TaskAdapter(var items: List<Task>, val onClick: (Int) -> Unit) : Adapter<T
             onClick(position)
         }
     }
+
+    fun updateItems(items: List<Task>) {
+        this.items = items
+        notifyDataSetChanged()
+    }
 }
 
 class TaskViewHolder(val binding: ItemTaskBinding) : ViewHolder(binding.root) {
