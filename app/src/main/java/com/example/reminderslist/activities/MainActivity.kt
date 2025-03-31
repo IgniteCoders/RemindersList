@@ -1,17 +1,20 @@
 package com.example.reminderslist.activities
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.reminderslist.R
-import com.example.reminderslist.data.Task
 import com.example.reminderslist.adapters.TaskAdapter
+import com.example.reminderslist.data.Task
 import com.example.reminderslist.data.TaskDAO
 import com.example.reminderslist.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,19 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         taskDAO = TaskDAO(this)
 
-        adapter = TaskAdapter(emptyList(), { position ->
-            val task = taskList[position]
-
-            val intent = Intent(this, TaskActivity::class.java)
-            intent.putExtra(TaskActivity.TASK_ID, task.id)
-            startActivity(intent)
-        }, { position ->
-            val task = taskList[position]
-
-            taskDAO.delete(task)
-
-            refreshData()
-        })
+        adapter = TaskAdapter(emptyList(), ::editTask, ::deleteTask)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -68,5 +59,28 @@ class MainActivity : AppCompatActivity() {
     fun refreshData() {
         taskList = taskDAO.findAll()
         adapter.updateItems(taskList)
+    }
+
+    fun editTask(position: Int) {
+        val task = taskList[position]
+
+        val intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra(TaskActivity.TASK_ID, task.id)
+        startActivity(intent)
+    }
+
+    fun deleteTask(position: Int) {
+        val task = taskList[position]
+
+        AlertDialog.Builder(this)
+            .setTitle("Delete task")
+            .setMessage("Are you sure you want to delete this task?")
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                taskDAO.delete(task)
+                refreshData()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .setCancelable(false)
+            .show()
     }
 }
