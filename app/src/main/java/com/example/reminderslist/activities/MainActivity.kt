@@ -37,8 +37,12 @@ class MainActivity : AppCompatActivity() {
 
         taskDAO = TaskDAO(this)
 
-        adapter = TaskAdapter(emptyList()) {
+        adapter = TaskAdapter(emptyList()) { position ->
+            val task = taskList[position]
 
+            val intent = Intent(this, TaskActivity::class.java)
+            intent.putExtra(TaskActivity.TASK_ID, task.id)
+            startActivity(intent)
         }
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
