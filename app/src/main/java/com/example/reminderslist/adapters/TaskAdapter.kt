@@ -7,7 +7,11 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.reminderslist.data.Task
 import com.example.reminderslist.databinding.ItemTaskBinding
 
-class TaskAdapter(var items: List<Task>, val onClick: (Int) -> Unit) : Adapter<TaskViewHolder>() {
+class TaskAdapter(
+    var items: List<Task>,
+    val onClick: (Int) -> Unit,
+    val onDelete: (Int) -> Unit
+) : Adapter<TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,6 +25,9 @@ class TaskAdapter(var items: List<Task>, val onClick: (Int) -> Unit) : Adapter<T
         holder.render(task)
         holder.itemView.setOnClickListener {
             onClick(position)
+        }
+        holder.binding.deleteButton.setOnClickListener {
+            onDelete(position)
         }
     }
 

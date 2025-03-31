@@ -37,13 +37,19 @@ class MainActivity : AppCompatActivity() {
 
         taskDAO = TaskDAO(this)
 
-        adapter = TaskAdapter(emptyList()) { position ->
+        adapter = TaskAdapter(emptyList(), { position ->
             val task = taskList[position]
 
             val intent = Intent(this, TaskActivity::class.java)
             intent.putExtra(TaskActivity.TASK_ID, task.id)
             startActivity(intent)
-        }
+        }, { position ->
+            val task = taskList[position]
+
+            taskDAO.delete(task)
+
+            refreshData()
+        })
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -56,8 +62,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        refreshData()
+    }
+
+    fun refreshData() {
         taskList = taskDAO.findAll()
         adapter.updateItems(taskList)
     }
-
 }
