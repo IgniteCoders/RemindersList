@@ -47,7 +47,11 @@ class TaskAdapter(
 class TaskViewHolder(val binding: ItemTaskBinding) : ViewHolder(binding.root) {
 
     fun render(task: Task) {
-        binding.titleTextView.text = task.title
+        if (task.done) {
+            binding.titleTextView.text = task.title.addStrikethrough()
+        } else {
+            binding.titleTextView.text = task.title
+        }
         binding.doneCheckBox.isChecked = task.done
     }
 }
