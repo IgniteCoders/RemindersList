@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         taskDAO = TaskDAO(this)
 
-        adapter = TaskAdapter(emptyList(), ::editTask, ::deleteTask)
+        adapter = TaskAdapter(emptyList(), ::editTask, ::deleteTask, ::checkTask)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -59,6 +59,14 @@ class MainActivity : AppCompatActivity() {
     fun refreshData() {
         taskList = taskDAO.findAll()
         adapter.updateItems(taskList)
+    }
+
+    fun checkTask(position: Int) {
+        val task = taskList[position]
+
+        task.done = !task.done
+        taskDAO.update(task)
+        refreshData()
     }
 
     fun editTask(position: Int) {

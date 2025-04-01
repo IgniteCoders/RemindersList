@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.reminderslist.data.Task
 import com.example.reminderslist.databinding.ItemTaskBinding
+import com.example.reminderslist.utils.addStrikethrough
 
 class TaskAdapter(
     var items: List<Task>,
     val onClick: (Int) -> Unit,
-    val onDelete: (Int) -> Unit
+    val onDelete: (Int) -> Unit,
+    val onCheck: (Int) -> Unit
 ) : Adapter<TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -28,6 +30,11 @@ class TaskAdapter(
         }
         holder.binding.deleteButton.setOnClickListener {
             onDelete(position)
+        }
+        holder.binding.doneCheckBox.setOnCheckedChangeListener { _, _ ->
+            if (holder.binding.doneCheckBox.isPressed) {
+                onCheck(position)
+            }
         }
     }
 

@@ -125,7 +125,7 @@ class TaskDAO(context: Context) {
                 null,          // The values for the WHERE clause
                 null,                   // don't group the rows
                 null,                   // don't filter by row groups
-                null               // The sort order
+                Task.COLUMN_NAME_DONE               // The sort order
             )
 
             while (cursor.moveToNext()) {
