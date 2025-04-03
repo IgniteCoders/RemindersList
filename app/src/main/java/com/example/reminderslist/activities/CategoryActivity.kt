@@ -6,24 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.reminderslist.R
-import com.example.reminderslist.activities.TaskListActivity.Companion
+import com.example.reminderslist.activities.TaskActivity.Companion
 import com.example.reminderslist.data.Category
 import com.example.reminderslist.data.CategoryDAO
 import com.example.reminderslist.data.Task
-import com.example.reminderslist.data.TaskDAO
+import com.example.reminderslist.databinding.ActivityCategoryBinding
 import com.example.reminderslist.databinding.ActivityTaskBinding
 
-class TaskActivity : AppCompatActivity() {
+class CategoryActivity : AppCompatActivity() {
 
     companion object {
         const val CATEGORY_ID = "CATEGORY_ID"
-        const val TASK_ID = "TASK_ID"
     }
 
-    lateinit var binding: ActivityTaskBinding
+    lateinit var binding: ActivityCategoryBinding
 
-    lateinit var taskDAO: TaskDAO
-    lateinit var task: Task
     lateinit var categoryDAO: CategoryDAO
     lateinit var category: Category
 
@@ -31,41 +28,37 @@ class TaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        binding = ActivityTaskBinding.inflate(layoutInflater)
+        binding = ActivityCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //setContentView(R.layout.activity_task)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val id = intent.getLongExtra(TASK_ID, -1L)
-        val categoryId = intent.getLongExtra(CATEGORY_ID, -1L)
-
-        taskDAO = TaskDAO(this)
         categoryDAO = CategoryDAO(this)
 
-        category = categoryDAO.findById(categoryId)!!
+        val id = intent.getLongExtra(CATEGORY_ID, -1L)
 
         if (id != -1L) {
-            task = taskDAO.findById(id)!!
-            binding.titleEditText.setText(task.title)
-            supportActionBar?.title = "Editar tarea"
+            category = categoryDAO.findById(id)!!
+            binding.titleEditText.setText(category.title)
+            supportActionBar?.title = "Editar categoría"
         } else {
-            task = Task(-1L, "", false, category)
+            category = Category(-1L, "")
             supportActionBar?.title = "Crear tarea"
         }
 
         binding.saveButton.setOnClickListener {
             val title = binding.titleEditText.text.toString()
 
-            task.title = title
+            category.title = title
 
-            if (task.id != -1L) {
-                taskDAO.update(task)
+            if (category.id != -1L) {
+                categoryDAO.update(category)
             } else {
-                taskDAO.insert(task)
+                categoryDAO.insert(category)
             }
 
             finish()

@@ -13,6 +13,12 @@
         android:theme="@style/Theme.RemindersList"
         tools:targetApi="31">
         <activity
+            android:name=".activities.CategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TaskListActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.TaskActivity"
             android:exported="false" />
         <activity
