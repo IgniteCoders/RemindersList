@@ -7,15 +7,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.reminderslist.R
 import com.example.reminderslist.adapters.TaskAdapter
 import com.example.reminderslist.data.Category
 import com.example.reminderslist.data.CategoryDAO
 import com.example.reminderslist.data.Task
 import com.example.reminderslist.data.TaskDAO
-import com.example.reminderslist.databinding.ActivityMainBinding
 import com.example.reminderslist.databinding.ActivityTaskListBinding
+
 
 class TaskListActivity : AppCompatActivity() {
 
@@ -63,12 +66,38 @@ class TaskListActivity : AppCompatActivity() {
             intent.putExtra(TaskActivity.CATEGORY_ID, category.id)
             startActivity(intent)
         }
+
+        configureGestures()
     }
 
     override fun onResume() {
         super.onResume()
 
         refreshData()
+    }
+
+    fun configureGestures() {
+        val simpleCallback = object : SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                adapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    deleteTask(viewHolder.adapterPosition)
+                } else {
+                    checkTask(viewHolder.adapterPosition)
+                }
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(simpleCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
     fun refreshData() {
@@ -81,6 +110,7 @@ class TaskListActivity : AppCompatActivity() {
 
         task.done = !task.done
         taskDAO.update(task)
+        adapter.notifyItemChanged(position)
         refreshData()
     }
 
@@ -103,7 +133,10 @@ class TaskListActivity : AppCompatActivity() {
                 taskDAO.delete(task)
                 refreshData()
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                // Recuperar el estado original de la celda
+                adapter.notifyItemChanged(position)
+            }
             .setCancelable(false)
             .show()
     }
